@@ -1,14 +1,11 @@
 package com.sousajaques.rinhaBackEnd23.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sousajaques.rinhaBackEnd23.repository.UsuariosRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,16 +41,16 @@ public class Usuarios {
      * <p> {@link OneToMany} tem o atributo "orphanRemoval" que significa que se for removido um {@link Usuarios},
      * automaticamente {@link Stack} serão removidos também para não ficarem "órfãos" no banco de dados </p>**/
     @OneToMany(mappedBy = "usuarios", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Stack> stacks;
 
 
     /** Construtor com todos os argumentos **/
-    public Usuarios(UUID id, String nome, String apelido, LocalDate nascimento) {
+    public Usuarios(UUID id, String nome, String apelido, LocalDate nascimento, List<Stack> stacks) {
         this.id = id;
         this.nome = nome;
         this.apelido = apelido;
         this.nascimento = nascimento;
+        this.stacks = stacks;
     }
 
 
@@ -83,15 +80,24 @@ public class Usuarios {
         return apelido;
     }
 
-    public void setApelido(String apelido) {
-        this.apelido = apelido;
-    }
 
     public LocalDate getNascimento() {
         return nascimento;
     }
 
+    public void setApelido(String apelido) {
+        this.apelido = apelido;
+    }
+
     public void setNascimento(LocalDate nascimento) {
         this.nascimento = nascimento;
+    }
+
+    public List<Stack> getStacks() {
+        return stacks;
+    }
+
+    public void setStacks(List<Stack> stacks) {
+        this.stacks = stacks;
     }
 }
