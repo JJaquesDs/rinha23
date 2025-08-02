@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     expose:
-      - "8081"
+      - "8080"
     deploy:
       resources:
         limits:
@@ -38,8 +38,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: '500MB'
+          cpus: '0.15'
+          memory: '256MB'
 
   db: # Banco de dados
     image: postgres
@@ -50,7 +50,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: '1500MB'
+          cpus: '0.85'
+          memory: '1744MB'
   # ...
 ...

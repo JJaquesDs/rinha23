@@ -12,11 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/")
 public class UsuariosController {
 
     private final UsuariosService usuariosService;
@@ -38,7 +39,7 @@ public class UsuariosController {
 
 
 
-    @GetMapping("/listar/{id}")
+    @GetMapping("/pessoas/{id}")
     public ResponseEntity<Usuarios> listarUsuariosPorId(@PathVariable UUID id){
 
         Usuarios usuario = usuariosService.listarPorId(id);
@@ -53,18 +54,14 @@ public class UsuariosController {
     }
 
 
-    @PostMapping("/criar")
-    public ResponseEntity<String> salvar(@RequestBody @Valid Usuarios usuario){
+    @PostMapping("/pessoas")
+    public ResponseEntity<Void> salvar(@RequestBody @Valid Usuarios usuario){
+        Usuarios usuarioSalvo = usuariosService.salvar(usuario);
 
-        if (usuariosValidacaoImpl.apelidoJaExiste(usuario.getApelido())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Apelido já existe");
-
-        }else{
-            usuariosService.bufferUsuarios(usuario);
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado");
+        return ResponseEntity.created(URI.create("/pessoas/" + usuarioSalvo.getId())).build();
     }
+
+
 
     /** Para usar essa rota, por padrao o termo de busca deve ser passado em:
      *
@@ -72,11 +69,11 @@ public class UsuariosController {
      *
      * Esse "serviço" não está em {@link UsuariosService}, está em {@link UsuarioBuscaImpl}(sujeito a refatoração)
      *  **/
-    @GetMapping("/buscaPersonalizada")
+    @GetMapping("/pessoas")
     public  ResponseEntity<?> buscaPersonalizada(@RequestParam(required = false) String t){
 
         if (t == null || t.isBlank()){
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O parâmetro '?t=' é obrigatório");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O parâmetro '?t=' é obrigatório");
         }
 
         List<Usuarios> resultado = usuarioBuscaImpl.buscaTermo(t);
@@ -86,7 +83,7 @@ public class UsuariosController {
     /** EndPoint especial apenas pra contar o total de registros no banco, por isso sem service e nada.
      *
      * (não será testado)**/
-    @GetMapping("/contagem")
+    @GetMapping("/contagem-pessoas")
     public ResponseEntity<String> contagemUsuarios(){
         long quantidade = usuariosRepository.count();
 
