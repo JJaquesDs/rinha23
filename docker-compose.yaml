@@ -47,6 +47,9 @@ services:
       POSTGRES_PASSWORD: senha123
       POSTGRES_USER: postgres
       POSTGRES_DB: rinha23
+      ## teste 200 conexões
+      POSTGRES_MAX_CONNECTIONS: 200
+
     deploy:
       resources:
         limits:
