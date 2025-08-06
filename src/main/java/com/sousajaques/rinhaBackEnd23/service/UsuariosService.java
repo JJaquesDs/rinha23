@@ -29,9 +29,6 @@ public class UsuariosService{
     }
 
 
-
-
-
     public Usuarios salvar(@Valid Usuarios usuario){
 
         if (usuariosRepository.existsByApelido(usuario.getApelido())){
